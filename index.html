@@ -130,12 +130,11 @@
 
       document.querySelectorAll('[variable]').forEach(elm => {
         const variableName = elm.getAttribute('variable')
+        const compute = variablesCompute[variableName]
 
         setInterval(() => {
           const currentTime = Date.now() 
           const diffInMS = weddingTime - currentTime
-
-          const compute = variablesCompute[variableName]
 
           updateElm(elm, compute(diffInMS))
         }, 1000)
