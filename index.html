@@ -111,34 +111,36 @@
         <a class="mail" href="mailto:prof.o.soliman@gmail.com">تنورونا 😘</a>
       </p>
       <p class="text">
-        بعد <span variable="daysLeft"></span> يوم ,
-        <span variable="hoursLeft"></span> ساعة ,
-        <span variable="minutesLeft"></span> دقيقة ,
-        <span variable="secondsLeft"></span> ثانية
+        بعد <span x-text="daysLeft"></span> يوم ,
+        <span x-text="hoursLeft"></span> ساعة ,
+        <span x-text="minutesLeft"></span> دقيقة ,
+        <span x-text="secondsLeft"></span> ثانية
       </p>
     </div>
     <script>
       const weddingTime = new Date("2021-09-09T09:00:00+02:00").getTime();
 
+      const setters = []
       const variablesCompute = {
         daysLeft(ms){ return Math.trunc(ms / 1000 / 60 / 60 / 24) },
         hoursLeft(ms){ return Math.trunc(ms / 1000 / 60 / 60) },
         minutesLeft(ms){ return Math.trunc(ms /1000/ 60) },
         secondsLeft(ms){ return Math.trunc(ms / 1000) }
       }
-      const updateElm = (elm, text) => elm.innerText = text
 
-      document.querySelectorAll('[variable]').forEach(elm => {
-        const variableName = elm.getAttribute('variable')
+      document.querySelectorAll('[x-text]').forEach(elm => {
+        const variableName = elm.getAttribute('x-text')
         const compute = variablesCompute[variableName]
 
-        setInterval(() => {
-          const currentTime = Date.now() 
-          const diffInMS = weddingTime - currentTime
-
-          updateElm(elm, compute(diffInMS))
-        }, 1000)
+        setters.push(diffInMS => elm.innerText = compute(diffInMS))
       })
+
+      setInterval(() => {
+        const currentTime = Date.now() 
+        const diffInMS = weddingTime - currentTime
+
+        setters.map(setter => setter(diffInMS))
+      }, 1000)
     </script>
   </body>
 </html>
